@@ -75,7 +75,8 @@ export default function ChatAppPage() {
   }, [router, refreshStats, loadChats]);
 
   const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
+    const res = await fetch('/api/auth/logout', { method: 'POST' });
+    if (!res.ok) throw new Error('Logout failed');
     router.push('/');
     router.refresh();
   };

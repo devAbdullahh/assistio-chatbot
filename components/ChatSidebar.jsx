@@ -58,6 +58,7 @@ export default function ChatSidebar({
 }) {
   const [pendingDelete, setPendingDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -89,6 +90,17 @@ export default function ChatSidebar({
       setPendingDelete(null);
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    if (loggingOut) return;
+
+    setLoggingOut(true);
+    try {
+      await onLogout();
+    } catch {
+      setLoggingOut(false);
     }
   };
 
@@ -188,8 +200,23 @@ export default function ChatSidebar({
             </p>
           </div>
 
-          <button type="button" onClick={onLogout} className={`w-full py-2.5 ${btnSecondary}`}>
-            Log out
+          <button
+            type="button"
+            disabled={loggingOut}
+            onClick={handleLogout}
+            className={`w-full py-2.5 disabled:cursor-not-allowed disabled:opacity-50 ${btnSecondary}`}
+          >
+            {loggingOut ? (
+              <span className="inline-flex items-center justify-center gap-2">
+                <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                Logging out…
+              </span>
+            ) : (
+              'Log out'
+            )}
           </button>
             </>
           )}
