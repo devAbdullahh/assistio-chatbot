@@ -21,7 +21,12 @@ function isTokenConsumingRequest(request) {
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith('/_next') || pathname.startsWith('/favicon')) {
+  if (
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/favicon') ||
+    pathname === '/icon' ||
+    pathname.startsWith('/apple-icon')
+  ) {
     return NextResponse.next();
   }
 
